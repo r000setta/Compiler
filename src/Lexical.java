@@ -1,4 +1,3 @@
-
 import java.util.*;
 
 public class Lexical {
@@ -32,7 +31,7 @@ public class Lexical {
     }
 
     public static void main(String[] args) {
-        List<Token> list = analyze("boolean x = 1;y = 1;z = 2;");
+        List<Token> list = analyze("int x = 1;float name = a;");
         for (Token token : list) {
             System.out.println(token.toString());
         }

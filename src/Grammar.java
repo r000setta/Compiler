@@ -213,8 +213,8 @@ public class Grammar {
     public static void main(String[] args) {
 //        String[] exps={"E->TX","X->+TX|@","T->FY","Y->*FY|@","F->(E)|i"};
 //        String[] exps = {"S->NVN", "N->s|t|g|w", "V->e|d"};
-        String[] exps = {"E->TX","X->+TX|-TX","T->FY","Y->*FY|/FY","F->NZ","Z->^F","N->(E)|n|+n|-n"};
-//        String[] exps = {"S->+SS", "S->*SS", "S->a"};
+//        String[] exps = {"E->TX","X->+TX|-TX","T->FY","Y->*FY|/FY","F->NZ","Z->^F","N->(E)|n|+n|-n"};
+        String[] exps = {"S->+SS", "S->*SS", "S->a"};
 //        String[] exps={"Z->d|X|Y|Z","Y->c","X->Y|a"};
         GramPattern pattern = new GramPattern(exps);
         getNT(pattern);

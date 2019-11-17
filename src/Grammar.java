@@ -36,6 +36,7 @@ public class Grammar {
     }
 
     private static void getFirst(GramPattern pattern) {
+        //"E->TX","X->+TX|-TX","T->FY","Y->*FY|/FY","F->NZ","Z->^F","N->(E)|n|+n|-n"
         Set<Character> terminals = pattern.getTerminals();
         Set<Character> nonTerminals = pattern.getNonTerminals();
         Map<Character, Set<Character>> first = new HashMap<>();
@@ -52,12 +53,12 @@ public class Grammar {
                 Character pre = entry.getKey();
                 Set<Character> match = entry.getValue();
                 for (Character c : match) {
+                    int size = first.get(pre).size();
                     if (terminals.contains(c)) {
                         res.add(c);
                     } else {
                         first.get(pre).addAll(first.get(c));
                     }
-                    int size = first.get(pre).size();
                     first.get(pre).addAll(res);
                     if (first.get(pre).size() != size) {
                         isChange = true;
@@ -147,7 +148,7 @@ public class Grammar {
         Stack<Character> stack = pattern.getStack();
         stack.push('S');
         int i = 0;
-        while (!stack.isEmpty()) {
+        while (!stack.isEmpty()&&i<str.length()) {
             Character character = str.charAt(i);
             Character top = stack.pop();
             if (pattern.getNonTerminals().contains(top)) {
@@ -171,17 +172,24 @@ public class Grammar {
     }
 
     private static void print(GramPattern pattern) {
+        System.out.println("======FinalExp======");
+        for (Map.Entry<Integer, Statement> entry : pattern.getFinalExp().entrySet()) {
+            Integer i = entry.getKey();
+            Statement statement = entry.getValue();
+            System.out.println(i + " : " + statement.toString());
+        }
+        System.out.println("======Terminals======");
         pattern.getTerminals().forEach(System.out::println);
-        System.out.println("======");
+        System.out.println("======NonTerminals======");
         pattern.getNonTerminals().forEach(System.out::println);
-        System.out.println("======");
+        System.out.println("======FirstTemp======");
         for (Map.Entry<Character, Set<Character>> entry : pattern.getFirstTemp().entrySet()) {
             Set<Character> set = entry.getValue();
             System.out.print(entry.getKey() + ":");
             set.forEach(System.out::print);
             System.out.println();
         }
-        System.out.println("======");
+        System.out.println("======FirstSet======");
         Map<Character, Set<Character>> first = pattern.getFirst();
         for (Map.Entry<Character, Set<Character>> entry : first.entrySet()) {
             Set<Character> set = entry.getValue();
@@ -189,22 +197,7 @@ public class Grammar {
             set.forEach(System.out::print);
             System.out.println();
         }
-        System.out.println("======");
-        pattern.getJumpTable().forEach(System.out::println);
-        System.out.println("======");
-        for (Map.Entry<Character, List<Character>> entry : pattern.getMapper().entrySet()) {
-            List<Character> set = entry.getValue();
-            System.out.print(entry.getKey() + ":");
-            set.forEach(System.out::print);
-            System.out.println();
-        }
-        System.out.println("============");
-        for (Map.Entry<Integer, Statement> entry : pattern.getFinalExp().entrySet()) {
-            Integer i = entry.getKey();
-            Statement statement = entry.getValue();
-            System.out.println(i + " : " + statement.toString());
-        }
-        System.out.println("============");
+        System.out.println("======MatchTable======");
         for (Map.Entry<Character, Map<Character, Integer>> entry : pattern.getMatchTable().entrySet()) {
             Character c = entry.getKey();
             Map<Character, Integer> map = entry.getValue();
@@ -214,12 +207,13 @@ public class Grammar {
             }
             System.out.println();
         }
-        System.out.println("============");
+        System.out.println("========================");
     }
 
     public static void main(String[] args) {
 //        String[] exps={"E->TX","X->+TX|@","T->FY","Y->*FY|@","F->(E)|i"};
-        String[] exps = {"S->NVN", "N->s|t|g|w", "V->e|d"};
+//        String[] exps = {"S->NVN", "N->s|t|g|w", "V->e|d"};
+        String[] exps = {"E->TX","X->+TX|-TX","T->FY","Y->*FY|/FY","F->NZ","Z->^F","N->(E)|n|+n|-n"};
 //        String[] exps = {"S->+SS", "S->*SS", "S->a"};
 //        String[] exps={"Z->d|X|Y|Z","Y->c","X->Y|a"};
         GramPattern pattern = new GramPattern(exps);
@@ -230,6 +224,7 @@ public class Grammar {
         buildJumpTable(pattern);
         buildMapper(pattern);
         fillMatchTable(pattern);
-        System.out.println(judge(pattern, "gdw"));
+        print(pattern);
+        System.out.println(judge(pattern, "n+n"));
     }
 }

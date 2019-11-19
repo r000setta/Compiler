@@ -75,7 +75,6 @@ public class Grammar {
         Map<Character, Map<Character, Integer>> table = new HashMap<>();
 
         for (Map.Entry<Integer, Statement> entry : pattern.getFinalExp().entrySet()) {
-            Map<Character, Integer> row = new HashMap<>();
             Integer id = entry.getKey();
             Statement statement = entry.getValue();
             Character left = statement.getLeft();
@@ -207,7 +206,6 @@ public class Grammar {
             }
             System.out.println();
         }
-        System.out.println("========================");
     }
 
     public static void main(String[] args) {
@@ -225,6 +223,7 @@ public class Grammar {
         buildMapper(pattern);
         fillMatchTable(pattern);
         print(pattern);
+        System.out.println("===========Result=============");
         System.out.println(judge(pattern, "n+n"));
     }
 }
